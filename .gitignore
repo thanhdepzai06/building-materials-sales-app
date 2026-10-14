@@ -36,3 +36,7 @@ yarn-error.*
 Thumbs.db
 .vscode/
 .idea/
+
+# Local caches (tranh sandbox/EPERM)
+.npm-cache/
+.expo-home/
