@@ -20,10 +20,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
 import { COLORS } from '../HomeScreen/styles';
-import type { RootTabParamList } from '../../types';
+import type { RootTabParamList, SimulateStackParamList } from '../../types';
 import styles from './styles';
 
 const GRADIENT_GREEN = ['#27AE60', '#2ECC71'] as const;
@@ -50,7 +51,9 @@ const STEPS: { label: string; desc: string }[] = [
 ];
 
 const SimulateScreen: React.FC = () => {
-  const navigation = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
+  const tabNavigation = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
+  const stackNavigation =
+    useNavigation<NativeStackNavigationProp<SimulateStackParamList>>();
   const [imageUri, setImageUri] = useState<string | null>(null);
 
   /* ---------------- Chup anh bang camera ---------------- */
@@ -103,16 +106,16 @@ const SimulateScreen: React.FC = () => {
   }, []);
 
   const handleContinue = useCallback((): void => {
-    Alert.alert(
-      'Bước tiếp theo',
-      'Bước kéo 4 điểm neo và áp vật liệu sẽ được bổ sung ở giai đoạn tiếp theo của đồ án.',
-      [{ text: 'Đã hiểu' }],
-    );
-  }, []);
+    if (!imageUri) {
+      return;
+    }
+    // Buoc 2: keo 4 diem neo xac dinh mat phang be mat
+    stackNavigation.navigate('SurfacePicker', { imageUri });
+  }, [imageUri, stackNavigation]);
 
   const handleOpenCatalog = useCallback((): void => {
-    navigation.navigate('Catalog');
-  }, [navigation]);
+    tabNavigation.navigate('Catalog');
+  }, [tabNavigation]);
 
   /* ---------------- Render ---------------- */
   return (
@@ -212,14 +215,10 @@ const SimulateScreen: React.FC = () => {
 
         {/* ===== Canh bao trang thai phat trien ===== */}
         <View style={styles.noticeCard}>
-          <Ionicons
-            name="construct-outline"
-            size={18}
-            color={COLORS.accent}
-          />
+          <Ionicons name="sparkles-outline" size={18} color={COLORS.accent} />
           <Text style={styles.noticeText}>
-            Bước chọn ảnh đã hoạt động. Phần kéo điểm neo và áp vật liệu đang
-            được phát triển. Trong lúc chờ, bạn có thể xem vật liệu tại Catalog.
+            Đã sẵn sàng: chụp/chọn ảnh, kéo 4 điểm neo xác định bề mặt, chọn vật
+            liệu và xem trước phối cảnh kèm dự toán.
           </Text>
         </View>
 

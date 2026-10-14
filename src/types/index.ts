@@ -72,11 +72,76 @@ export type CatalogStackParamList = {
 
 /**
  * Params cua tab "Simulate" (Virtual Visualizer - Tinh nang 4).
- * Cac man hinh con se duoc bo sung dan.
+ * Luong: SimulateHome -> SurfacePicker -> MaterialPicker -> Visualize -> Result
  */
 export type SimulateStackParamList = {
   SimulateHome: undefined;
+  /** Buoc 2: keo 4 diem neo xac dinh mat phang be mat */
+  SurfacePicker: { imageUri: string };
+  /** Buoc 3: chon vat lieu de ap len be mat */
+  MaterialPicker: {
+    imageUri: string;
+    /** 4 diem neo theo toa do pixel tren anh goc */
+    corners: ImageCorners;
+    /** Kich thuoc anh goc (de tinh ty le hien thi) */
+    imageSize: ImageSize;
+  };
+  /** Buoc 4: xem truoc ket qua + chinh do phong / do dam */
+  Visualize: {
+    imageUri: string;
+    corners: ImageCorners;
+    imageSize: ImageSize;
+    productId: string;
+  };
+  /** Buoc 5: ket qua cuoi + du toan + them vao gio */
+  Result: {
+    imageUri: string;
+    corners: ImageCorners;
+    imageSize: ImageSize;
+    productId: string;
+    /** Do phong da chon (0..1) */
+    opacity: number;
+  };
 };
+
+/** Mot diem toa do tren anh (don vi: pixel cua anh goc) */
+export interface Point {
+  x: number;
+  y: number;
+}
+
+/** Kich thuoc anh goc */
+export interface ImageSize {
+  width: number;
+  height: number;
+}
+
+/**
+ * 4 diem neo cua mat phang be mat, theo thu tu:
+ * topLeft -> topRight -> bottomRight -> bottomLeft
+ */
+export interface ImageCorners {
+  topLeft: Point;
+  topRight: Point;
+  bottomRight: Point;
+  bottomLeft: Point;
+}
+
+/** Ban ghi 1 lan mo phong - dung cho Tinh nang 5 (lich su) */
+export interface SimulationRecord {
+  id: string;
+  /** Duong dan anh goc (da luu trong bo nho app) */
+  originalUri: string;
+  /** Duong dan anh ket qua (da luu) */
+  resultUri: string | null;
+  productId: string;
+  productName: string;
+  opacity: number;
+  /** Dien tich be mat uoc luong (m2) */
+  estimatedArea: number;
+  createdAt: string; // ISO date string
+  isFavorite: boolean;
+}
 
 /**
  * Params cua Bottom Tab Navigator.
