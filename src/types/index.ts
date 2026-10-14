@@ -71,15 +71,26 @@ export type CatalogStackParamList = {
 };
 
 /**
+ * Params cua tab "Simulate" (Virtual Visualizer - Tinh nang 4).
+ * Cac man hinh con se duoc bo sung dan.
+ */
+export type SimulateStackParamList = {
+  SimulateHome: undefined;
+};
+
+/**
  * Params cua Bottom Tab Navigator.
- * Tab Catalog dung NavigatorScreenParams de ho tro navigate long stack:
+ * Cac tab dung Stack dung NavigatorScreenParams de ho tro navigate long:
  *   navigation.navigate('Catalog', { screen: 'ProductDetail', params: {...} })
  */
 export type RootTabParamList = {
   Home: { greeting?: string } | undefined;
-  Simulate: undefined;
-  Quote: undefined;
-  Profile: undefined;
   /** Tab Catalog chua Stack (danh sach -> chi tiet) */
   Catalog: NavigatorScreenParams<CatalogStackParamList> | undefined;
+  /** May tinh vat tu (Tinh nang 2) */
+  Calculate: undefined;
+  /** Gio hang & bao gia (Tinh nang 3) */
+  Quote: undefined;
+  /** Virtual Visualizer (Tinh nang 4) */
+  Simulate: NavigatorScreenParams<SimulateStackParamList> | undefined;
 };

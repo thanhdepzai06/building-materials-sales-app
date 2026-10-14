@@ -1,33 +1,30 @@
 /**
  * src/navigation/index.tsx
- * Bottom Tab Navigator 5 tab: Home | Catalog | Simulate | Quote | Profile.
+ * Bottom Tab Navigator 5 tab: Home | Catalog | Calculate | Quote | Simulate.
  * Active color #E67E22 (cam dat), Inactive #808080, background #1A1A1A.
  *
- * - Home    : da hoan thien (man hinh chinh)
- * - Catalog : Stack Navigator that (CatalogList -> ProductDetail)
- * - Simulate/Quote/Profile : placeholder, se implement o cac tinh nang sau
+ * - Home      : man hinh chinh (da hoan thien)
+ * - Catalog   : Stack Navigator that (CatalogList -> ProductDetail)
+ * - Calculate : May tinh vat tu (Tinh nang 2)
+ * - Quote     : Gio hang & Bao gia (Tinh nang 3) - co badge so luong
+ * - Simulate  : placeholder, se implement o Tinh nang 4 (Virtual Visualizer)
  */
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
 import HomeScreen from '../screens/HomeScreen';
+import CalculatorScreen from '../screens/CalculatorScreen';
+import QuoteScreen from '../screens/QuoteScreen';
 import CatalogStack from './CatalogStack';
+import SimulateStack from './SimulateStack';
+import { useCart } from '../context/CartContext';
 import type { IoniconName, RootTabParamList } from '../types';
 import { COLORS } from '../screens/HomeScreen/styles';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
-
-/** Placeholder icon cho cac tab chua implement */
-const renderPlaceholder =
-  (icon: IoniconName): React.FC =>
-  () =>
-    <Ionicons name={icon} size={48} color={COLORS.inactive} />;
-
-const SimulatePlaceholder: React.FC = renderPlaceholder('sparkles-outline');
-const QuotePlaceholder: React.FC = renderPlaceholder('calculator-outline');
-const ProfilePlaceholder: React.FC = renderPlaceholder('person-circle-outline');
 
 interface TabIconArgs {
   color: string;
@@ -47,35 +44,61 @@ const TAB_ICONS: Record<
 > = {
   Home: { active: 'home', inactive: 'home-outline' },
   Catalog: { active: 'grid', inactive: 'grid-outline' },
-  Simulate: { active: 'sparkles', inactive: 'sparkles-outline' },
+  Calculate: { active: 'calculator', inactive: 'calculator-outline' },
   Quote: { active: 'document-text', inactive: 'document-text-outline' },
-  Profile: { active: 'person', inactive: 'person-outline' },
+  Simulate: { active: 'sparkles', inactive: 'sparkles-outline' },
 };
 
-const AppTabs: React.FC = () => (
-  <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerShown: false,
-      tabBarActiveTintColor: COLORS.accent,
-      tabBarInactiveTintColor: COLORS.inactive,
-      tabBarStyle: styles.tabBar,
-      tabBarLabelStyle: styles.tabLabel,
-      tabBarIcon: ((): ((
-        args: TabIconArgs & { focused: boolean },
-      ) => React.ReactElement) => {
-        const icons = TAB_ICONS[route.name];
-        return ({ color, size, focused }): React.ReactElement =>
-          renderTabIcon(focused ? icons.active : icons.inactive)({ color, size });
-      })(),
-    })}
-  >
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="Catalog" component={CatalogStack} />
-    <Tab.Screen name="Simulate" component={SimulatePlaceholder} />
-    <Tab.Screen name="Quote" component={QuotePlaceholder} />
-    <Tab.Screen name="Profile" component={ProfilePlaceholder} />
-  </Tab.Navigator>
-);
+/** Badge hien so luong mon trong gio hang tren tab Quote */
+const CartBadge: React.FC<{ count: number }> = ({ count }) => {
+  if (count <= 0) {
+    return null;
+  }
+  return (
+    <View style={styles.badge}>
+      <Text style={styles.badgeText}>{count > 99 ? '99+' : `${count}`}</Text>
+    </View>
+  );
+};
+
+const AppTabs: React.FC = () => {
+  const { totalCount } = useCart();
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }): BottomTabNavigationOptions => ({
+        headerShown: false,
+        tabBarActiveTintColor: COLORS.accent,
+        tabBarInactiveTintColor: COLORS.inactive,
+        tabBarStyle: styles.tabBar,
+        tabBarLabelStyle: styles.tabLabel,
+        tabBarIcon: ((): ((
+          args: TabIconArgs & { focused: boolean },
+        ) => React.ReactElement) => {
+          const icons = TAB_ICONS[route.name];
+          return ({ color, size, focused }): React.ReactElement =>
+            renderTabIcon(focused ? icons.active : icons.inactive)({
+              color,
+              size,
+            });
+        })(),
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Catalog" component={CatalogStack} />
+      <Tab.Screen name="Calculate" component={CalculatorScreen} />
+      <Tab.Screen
+        name="Quote"
+        component={QuoteScreen}
+        options={{
+          tabBarBadge: totalCount > 0 ? totalCount : undefined,
+          tabBarBadgeStyle: styles.tabBadge,
+        }}
+      />
+      <Tab.Screen name="Simulate" component={SimulateStack} />
+    </Tab.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
   tabBar: {
@@ -88,6 +111,28 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: 10,
+  },
+  tabBadge: {
+    backgroundColor: COLORS.accent,
+    color: '#FFFFFF',
+    fontSize: 10,
+  },
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -10,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: COLORS.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });
 

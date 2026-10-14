@@ -23,6 +23,7 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import QuickActionItem from '../../components/QuickActionItem';
 import ProductCard from '../../components/ProductCard';
 import { QUICK_ACTIONS, fetchHomeData } from '../../data/mockData';
+import { useCart } from '../../context/CartContext';
 import type { Product, Project, RootTabParamList } from '../../types';
 import styles, { COLORS } from './styles';
 
@@ -32,6 +33,8 @@ const GRADIENT_GREEN = [COLORS.greenFrom, COLORS.greenTo] as const;
 const GRADIENT_SLATE = [COLORS.slateFrom, COLORS.slateTo] as const;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
+  const { totalCount } = useCart();
+
   /* ---------------- State ---------------- */
   const [activeTab] = useState<string>('Home');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -63,7 +66,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     }
     return products.filter(
       (p: Product): boolean =>
-        p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q),
+        p.name.toLowerCase().includes(q) ||
+        p.brand.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q),
     );
   }, [products, searchQuery]);
 
@@ -101,6 +106,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     void id;
   }, []);
 
+  const handleCalculatePress = useCallback((): void => {
+    navigation.navigate('Calculate');
+  }, [navigation]);
+
+  const handleCartPress = useCallback((): void => {
+    navigation.navigate('Quote');
+  }, [navigation]);
+
   const keyExtractorProduct = useCallback(
     (item: Product): string => item.id,
     [],
@@ -134,10 +147,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           </Text>
           <Pressable
             style={styles.bellButton}
-            onPress={(): void => navigation.navigate('Quote')}
-            accessibilityLabel="Thông báo báo giá"
+            onPress={handleCartPress}
+            accessibilityLabel="Giỏ hàng"
           >
-            <Ionicons name="notifications-outline" size={24} color="#FFFFFF" />
+            <Ionicons name="cart-outline" size={24} color="#FFFFFF" />
+            {totalCount > 0 ? (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>
+                  {totalCount > 99 ? '99+' : `${totalCount}`}
+                </Text>
+              </View>
+            ) : null}
           </Pressable>
         </View>
 

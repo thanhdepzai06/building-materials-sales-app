@@ -44,6 +44,23 @@ const styles = StyleSheet.create({
   bellButton: {
     padding: 4,
   },
+  cartBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -6,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: COLORS.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  cartBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
   /* ---------- Search bar ---------- */
   searchRow: {
     flexDirection: 'row',

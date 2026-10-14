@@ -22,6 +22,7 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
 import { findProductById } from '../../data/mockData';
 import { formatVnd } from '../../utils/format';
+import { useCart } from '../../context/CartContext';
 import { COLORS } from '../HomeScreen/styles';
 import type {
   CatalogStackParamList,
@@ -52,6 +53,8 @@ const ProductDetailScreen: React.FC<ProductDetailProps> = ({
   const tabNavigation =
     useNavigation<BottomTabNavigationProp<RootTabParamList>>();
 
+  const { addToCart, getQuantity } = useCart();
+
   const product = useMemo(
     () => findProductById(productId),
     [productId],
@@ -67,13 +70,19 @@ const ProductDetailScreen: React.FC<ProductDetailProps> = ({
     if (!product) {
       return;
     }
-    // TODO (Tinh nang 3): ghi vao CartContext + AsyncStorage
+    addToCart(product, 1);
     Alert.alert(
       'Đã thêm vào giỏ',
       `${product.name}\n${formatVnd(product.price)} / ${product.unit}`,
-      [{ text: 'OK' }],
+      [
+        { text: 'Tiếp tục xem', style: 'cancel' },
+        {
+          text: 'Xem giỏ hàng',
+          onPress: (): void => tabNavigation.navigate('Quote'),
+        },
+      ],
     );
-  }, [product]);
+  }, [product, addToCart, tabNavigation]);
 
   /* ---------------- Khong tim thay san pham ---------------- */
   if (!product) {
@@ -214,7 +223,11 @@ const ProductDetailScreen: React.FC<ProductDetailProps> = ({
           accessibilityRole="button"
         >
           <Ionicons name="cart-outline" size={18} color="#FFFFFF" />
-          <Text style={styles.cartButtonText}>Thêm vào giỏ</Text>
+          <Text style={styles.cartButtonText}>
+            {getQuantity(product.id) > 0
+              ? `Thêm (đã có ${getQuantity(product.id)})`
+              : 'Thêm vào giỏ'}
+          </Text>
         </Pressable>
       </View>
     </View>

@@ -10,15 +10,19 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1A1A1A"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Ứng dụng cần camera để chụp ảnh không gian nhà bạn, phục vụ tính năng mô phỏng vật liệu.",
+        "NSPhotoLibraryUsageDescription": "Ứng dụng cần truy cập thư viện ảnh để bạn chọn ảnh không gian cần mô phỏng vật liệu."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1A1A1A"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -26,11 +30,24 @@
       "statusBar": {
         "barStyle": "light",
         "backgroundColor": "#1A1A1A"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "backgroundColor": "#1A1A1A"
+    "backgroundColor": "#1A1A1A",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Ứng dụng cần truy cập thư viện ảnh để bạn chọn ảnh không gian cần mô phỏng vật liệu.",
+          "cameraPermission": "Ứng dụng cần camera để chụp ảnh không gian nhà bạn, phục vụ tính năng mô phỏng vật liệu."
+        }
+      ]
+    ]
   }
 }

@@ -1,6 +1,6 @@
 /**
  * App.tsx - Root component.
- * NavigationContainer + Bottom Tab Navigator (Home | Simulate | Quote | Profile).
+ * CartProvider (gio hang toan cuc) > NavigationContainer > Bottom Tab Navigator.
  * Theme dark toan ung dung theo layout Hypic.
  */
 import React from 'react';
@@ -9,6 +9,7 @@ import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import type { Theme } from '@react-navigation/native';
 
 import AppTabs from './src/navigation';
+import { CartProvider } from './src/context/CartContext';
 import { COLORS } from './src/screens/HomeScreen/styles';
 
 /** Custom dark theme khop mau nen tong the #1A1A1A */
@@ -25,10 +26,12 @@ const AppTheme: Theme = {
 };
 
 const App: React.FC = () => (
-  <NavigationContainer theme={AppTheme}>
-    <StatusBar style="light" />
-    <AppTabs />
-  </NavigationContainer>
+  <CartProvider>
+    <NavigationContainer theme={AppTheme}>
+      <StatusBar style="light" />
+      <AppTabs />
+    </NavigationContainer>
+  </CartProvider>
 );
 
 export default App;
