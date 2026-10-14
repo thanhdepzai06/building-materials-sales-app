@@ -40,3 +40,6 @@ Thumbs.db
 # Local caches (tranh sandbox/EPERM)
 .npm-cache/
 .expo-home/
+
+# Test export output
+.expo-export-test/
