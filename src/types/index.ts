@@ -154,8 +154,12 @@ export type RootTabParamList = {
   Catalog: NavigatorScreenParams<CatalogStackParamList> | undefined;
   /** May tinh vat tu (Tinh nang 2) */
   Calculate: undefined;
+  /** Bao gia tron goi cong trinh */
+  Pricing: undefined;
   /** Gio hang & bao gia (Tinh nang 3) */
   Quote: undefined;
+  /** Ho so - lich su mo phong (Tinh nang 5) */
+  Profile: undefined;
   /** Virtual Visualizer (Tinh nang 4) */
   Simulate: NavigatorScreenParams<SimulateStackParamList> | undefined;
 };

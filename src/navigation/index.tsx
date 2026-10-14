@@ -1,23 +1,29 @@
 /**
  * src/navigation/index.tsx
- * Bottom Tab Navigator 5 tab: Home | Catalog | Calculate | Quote | Simulate.
- * Active color #E67E22 (cam dat), Inactive #808080, background #1A1A1A.
+ * Bottom Tab Navigator 6 tab:
+ *   Home | Catalog | Calculate | Pricing | Quote | Profile
  *
- * - Home      : man hinh chinh (da hoan thien)
- * - Catalog   : Stack Navigator that (CatalogList -> ProductDetail)
+ * - Home      : man hinh chinh, co badge gio hang
+ * - Catalog   : Stack (CatalogList -> ProductDetail)
  * - Calculate : May tinh vat tu (Tinh nang 2)
- * - Quote     : Gio hang & Bao gia (Tinh nang 3) - co badge so luong
- * - Simulate  : placeholder, se implement o Tinh nang 4 (Virtual Visualizer)
+ * - Pricing   : Bao gia tron goi cong trinh (Tinh nang 3 mo rong)
+ * - Quote     : Gio hang & xuat bao gia, co badge so luong
+ * - Profile   : Lich su mo phong & yeu thich (Tinh nang 5)
+ *
+ * Tab Simulate (Virtual Visualizer) duoc truy cap tu Home va tu ProductDetail
+ * thay vi dat tren tab bar, de tranh qua nhieu tab gay roi.
  */
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
 import HomeScreen from '../screens/HomeScreen';
 import CalculatorScreen from '../screens/CalculatorScreen';
+import PricingScreen from '../screens/PricingScreen';
 import QuoteScreen from '../screens/QuoteScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import CatalogStack from './CatalogStack';
 import SimulateStack from './SimulateStack';
 import { useCart } from '../context/CartContext';
@@ -45,20 +51,21 @@ const TAB_ICONS: Record<
   Home: { active: 'home', inactive: 'home-outline' },
   Catalog: { active: 'grid', inactive: 'grid-outline' },
   Calculate: { active: 'calculator', inactive: 'calculator-outline' },
-  Quote: { active: 'document-text', inactive: 'document-text-outline' },
+  Pricing: { active: 'pricetags', inactive: 'pricetags-outline' },
+  Quote: { active: 'cart', inactive: 'cart-outline' },
+  Profile: { active: 'person', inactive: 'person-outline' },
   Simulate: { active: 'sparkles', inactive: 'sparkles-outline' },
 };
 
-/** Badge hien so luong mon trong gio hang tren tab Quote */
-const CartBadge: React.FC<{ count: number }> = ({ count }) => {
-  if (count <= 0) {
-    return null;
-  }
-  return (
-    <View style={styles.badge}>
-      <Text style={styles.badgeText}>{count > 99 ? '99+' : `${count}`}</Text>
-    </View>
-  );
+/** Nhan hien thi ngan cho tab bar */
+const TAB_LABELS: Record<keyof RootTabParamList, string> = {
+  Home: 'Trang chủ',
+  Catalog: 'Kho',
+  Calculate: 'Tính',
+  Pricing: 'Báo giá',
+  Quote: 'Giỏ',
+  Profile: 'Hồ sơ',
+  Simulate: 'Mô phỏng',
 };
 
 const AppTabs: React.FC = () => {
@@ -72,6 +79,7 @@ const AppTabs: React.FC = () => {
         tabBarInactiveTintColor: COLORS.inactive,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabLabel,
+        tabBarLabel: TAB_LABELS[route.name],
         tabBarIcon: ((): ((
           args: TabIconArgs & { focused: boolean },
         ) => React.ReactElement) => {
@@ -87,6 +95,7 @@ const AppTabs: React.FC = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Catalog" component={CatalogStack} />
       <Tab.Screen name="Calculate" component={CalculatorScreen} />
+      <Tab.Screen name="Pricing" component={PricingScreen} />
       <Tab.Screen
         name="Quote"
         component={QuoteScreen}
@@ -95,7 +104,13 @@ const AppTabs: React.FC = () => {
           tabBarBadgeStyle: styles.tabBadge,
         }}
       />
-      <Tab.Screen name="Simulate" component={SimulateStack} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      {/* Tab Simulate an khoi tab bar - truy cap qua Home / ProductDetail */}
+      <Tab.Screen
+        name="Simulate"
+        component={SimulateStack}
+        options={{ tabBarButton: () => null, tabBarItemStyle: { display: 'none' } }}
+      />
     </Tab.Navigator>
   );
 };
@@ -116,23 +131,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     color: '#FFFFFF',
     fontSize: 10,
-  },
-  badge: {
-    position: 'absolute',
-    top: -4,
-    right: -10,
-    minWidth: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: COLORS.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#FFFFFF',
   },
 });
 

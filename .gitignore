@@ -43,3 +43,6 @@ Thumbs.db
 
 # Test export output
 .expo-export-test/
+
+# Test build output
+.test-build/
