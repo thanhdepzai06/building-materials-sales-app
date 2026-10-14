@@ -7,12 +7,12 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import type { QuickAction } from '../types';
+import type { QuickAction, RootTabParamList } from '../types';
 
 /** Props cua QuickActionItem */
 interface QuickActionItemProps {
   action: QuickAction;
-  onPress: (routeName: string) => void;
+  onPress: (routeName: keyof RootTabParamList) => void;
 }
 
 const CIRCLE_SIZE = 64;

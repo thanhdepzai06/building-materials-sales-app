@@ -69,18 +69,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
 
   /* ---------------- Handlers ---------------- */
   const handleQuickAction = useCallback(
-    (routeName: string): void => {
-      // Cac tab co san thi chuyen tab, con lai navigate toi stack screen (mock).
-      switch (routeName) {
-        case 'Simulate':
-        case 'Quote':
-          navigation.navigate(routeName);
-          break;
-        default:
-          // Catalog / Stock chua co screen -> tam navigate toi Simulate khi demo.
-          navigation.navigate('Simulate');
-          break;
-      }
+    (routeName: keyof RootTabParamList): void => {
+      // Moi Quick Action tro dung tab tuong ung (type-safe qua QuickAction.routeName).
+      navigation.navigate(routeName);
     },
     [navigation],
   );
@@ -93,13 +84,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     navigation.navigate('Simulate');
   }, [navigation]);
 
-  const handleProductPress = useCallback((id: string): void => {
-    // TODO: navigate toi QuoteDetail khi Spring Boot API hoat dong.
-    console.log('Open product detail:', id);
-  }, []);
+  const handleProductPress = useCallback(
+    (id: string): void => {
+      // Mo tab Catalog va day thang sang man chi tiet san pham tuong ung.
+      navigation.navigate('Catalog', {
+        screen: 'ProductDetail',
+        params: { productId: id },
+      });
+    },
+    [navigation],
+  );
 
   const handleProjectPress = useCallback((id: string): void => {
-    console.log('Open project detail:', id);
+    // Chua co man chi tiet du an -> tam thoi chua lam gi.
+    // Se bo sung o tinh nang "Du an tieu bieu" sau.
+    void id;
   }, []);
 
   const keyExtractorProduct = useCallback(

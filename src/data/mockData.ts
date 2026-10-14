@@ -1,6 +1,6 @@
 /**
  * src/data/mockData.ts
- * Du lieu tam (mock) cho man Home.
+ * Du lieu tam (mock) cho man Home + Catalog.
  * Backend Spring Boot RESTful API chua implement -> dung mock,
  * ve sau thay bang Axios GET /api/products, /api/projects.
  */
@@ -15,8 +15,18 @@ export const QUICK_ACTIONS: QuickAction[] = [
   { id: 'qa-1', label: 'Mô phỏng AI', iconName: 'camera', routeName: 'Simulate' },
   { id: 'qa-2', label: 'Catalog Gạch', iconName: 'grid', routeName: 'Catalog' },
   { id: 'qa-3', label: 'Báo giá', iconName: 'document-text', routeName: 'Quote' },
-  { id: 'qa-4', label: 'Tồn kho', iconName: 'cube', routeName: 'Stock' },
+  { id: 'qa-4', label: 'Danh mục', iconName: 'cube', routeName: 'Catalog' },
 ];
+
+/** Danh sach nhom vat lieu - dung cho bo loc o man Catalog */
+export const CATEGORIES = [
+  'Tất cả',
+  'Gạch ốp lát',
+  'Sơn nước',
+  'Xi măng',
+  'Keo & Phụ gia',
+  'Gạch trang trí',
+] as const;
 
 /** 8 san pham VLXD thuc te - "Vat lieu xu huong" */
 export const TRENDING_PRODUCTS: Product[] = [
@@ -28,6 +38,15 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'm2',
     category: 'Gạch ốp lát',
     imageUrl: ph('gach-dongtam-6060', 280, 350),
+    description:
+      'Gạch men bóng kiếng vân đá marble, bề mặt siêu bóng chống bám bẩn, phù hợp lát sàn phòng khách và phòng ngủ.',
+    origin: 'Việt Nam',
+    warranty: '10 năm',
+    inStock: true,
+    surfaceType: 'floor',
+    tileWidth: 60,
+    tileHeight: 60,
+    colorHex: '#E8E2D9',
   },
   {
     id: 'prd-02',
@@ -37,6 +56,15 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'm2',
     category: 'Gạch ốp lát',
     imageUrl: ph('gach-prime-8080', 280, 350),
+    description:
+      'Gạch Granite xương đá đồng nhất, chịu lực tốt, chống trầy xước. Thích hợp lát sàn khu vực đông người qua lại.',
+    origin: 'Việt Nam',
+    warranty: '15 năm',
+    inStock: true,
+    surfaceType: 'both',
+    tileWidth: 80,
+    tileHeight: 80,
+    colorHex: '#EFE3C8',
   },
   {
     id: 'prd-03',
@@ -46,6 +74,15 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'thùng',
     category: 'Sơn nước',
     imageUrl: ph('son-dulux-easyclean', 280, 350),
+    description:
+      'Sơn nội thất chống bám bẩn, lau chùi dễ dàng, kháng khuẩn. Thùng 18 lít pha sẵn, phủ được khoảng 60-70 m2/lớp.',
+    origin: 'Việt Nam',
+    warranty: '5 năm',
+    inStock: true,
+    surfaceType: 'wall',
+    tileWidth: 0,
+    tileHeight: 0,
+    colorHex: '#F5F1E8',
   },
   {
     id: 'prd-04',
@@ -55,15 +92,33 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'bao',
     category: 'Xi măng',
     imageUrl: ph('ximang-insee-40', 280, 350),
+    description:
+      'Xi măng Portland hỗn hợp PCB40 đa dụng, dùng cho xây tô và đổ bê tông. Bao 50kg tiêu chuẩn TCVN 6260:2020.',
+    origin: 'Việt Nam',
+    warranty: '6 tháng',
+    inStock: true,
+    surfaceType: 'both',
+    tileWidth: 0,
+    tileHeight: 0,
+    colorHex: '#9AA0A6',
   },
   {
     id: 'prd-05',
-    name: 'Gạch giả gỗ 15x60 opsàn cao cấp',
+    name: 'Gạch giả gỗ 15x60 op sàn cao cấp',
     brand: 'VICOSTONE',
     price: 315000,
     unit: 'm2',
     category: 'Gạch ốp lát',
     imageUrl: ph('gach-giago-1560', 280, 350),
+    description:
+      'Gạch giả gỗ vân gỗ tự nhiên, chống trơn trượt R10. Phù hợp lát sàn phòng ngủ, ban công, quán cà phê.',
+    origin: 'Việt Nam',
+    warranty: '10 năm',
+    inStock: true,
+    surfaceType: 'floor',
+    tileWidth: 15,
+    tileHeight: 60,
+    colorHex: '#B08B5E',
   },
   {
     id: 'prd-06',
@@ -73,6 +128,15 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'thùng',
     category: 'Sơn nước',
     imageUrl: ph('son-jotun-ngoai-that', 280, 350),
+    description:
+      'Sơn ngoại thất chống tia UV, bền màu trên 12 năm, chống thấm và chống rêu mốc. Thùng 18 lít.',
+    origin: 'Na Uy',
+    warranty: '12 năm',
+    inStock: true,
+    surfaceType: 'wall',
+    tileWidth: 0,
+    tileHeight: 0,
+    colorHex: '#D9D2C5',
   },
   {
     id: 'prd-07',
@@ -82,6 +146,15 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'bao',
     category: 'Keo & Phụ gia',
     imageUrl: ph('keo-dan-gach-weber', 280, 350),
+    description:
+      'Keo dán gạch gốc xi măng biến tính polymer, độ bám dính cao, chịu nước. Bao 25kg dán được khoảng 4-5 m2.',
+    origin: 'Việt Nam',
+    warranty: '12 tháng',
+    inStock: true,
+    surfaceType: 'both',
+    tileWidth: 0,
+    tileHeight: 0,
+    colorHex: '#A8A29E',
   },
   {
     id: 'prd-08',
@@ -91,6 +164,15 @@ export const TRENDING_PRODUCTS: Product[] = [
     unit: 'm2',
     category: 'Gạch trang trí',
     imageUrl: ph('gach-mosaic-kinh', 280, 350),
+    description:
+      'Gạch mosaic kính nhiều màu, dùng ốp tường trang trí bếp, phòng tắm, hồ bơi. Không thấm nước, dễ vệ sinh.',
+    origin: 'Trung Quốc',
+    warranty: '5 năm',
+    inStock: false,
+    surfaceType: 'wall',
+    tileWidth: 30,
+    tileHeight: 30,
+    colorHex: '#7FB3D5',
   },
 ];
 
@@ -98,7 +180,7 @@ export const TRENDING_PRODUCTS: Product[] = [
 export const REFERENCE_PROJECTS: Project[] = [
   {
     id: 'prj-01',
-    name: 'Bi thự Vinhome Ocean Park',
+    name: 'Biệt thự Vinhome Ocean Park',
     location: 'Gia Lâm, Hà Nội',
     area: '250 m2 gạch + sơn',
     imageUrl: ph('du-an-vinhome-ocean', 400, 300),
@@ -129,7 +211,7 @@ export const REFERENCE_PROJECTS: Project[] = [
     name: 'Khách sạn Sea Pearl Hạ Long',
     location: 'Hạ Long, Quảng Ninh',
     area: '1.200 m2 granite',
-    imageUrl: ph('du-an-khachsank', 400, 300),
+    imageUrl: ph('du-an-khachsan', 400, 300),
   },
   {
     id: 'prj-06',
@@ -150,3 +232,7 @@ export const fetchHomeData = (): Promise<{
       resolve({ products: TRENDING_PRODUCTS, projects: REFERENCE_PROJECTS });
     }, 300);
   });
+
+/** Tim san pham theo id (dung cho man ProductDetail) */
+export const findProductById = (id: string): Product | undefined =>
+  TRENDING_PRODUCTS.find((p: Product): boolean => p.id === id);

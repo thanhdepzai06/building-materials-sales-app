@@ -4,12 +4,24 @@
  * Nghiem cam su dung 'any' (TypeScript strict mode - PROG3002).
  */
 import type { Ionicons } from '@expo/vector-icons';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 
 /** Don vi tinh cua vat lieu xay dung */
 export type UnitOfMeasure = 'm2' | 'viên' | 'bao' | 'thùng' | 'lít' | 'tấn';
 
 /** Ten glyph hop le cua bo icon Ionicons */
 export type IoniconName = keyof typeof Ionicons.glyphMap;
+
+/** Nhom vat lieu - dung cho bo loc o man Catalog */
+export type ProductCategory =
+  | 'Gạch ốp lát'
+  | 'Sơn nước'
+  | 'Xi măng'
+  | 'Keo & Phụ gia'
+  | 'Gạch trang trí';
+
+/** Be mat vat lieu co the ap len (phuc vu Virtual Visualizer sau nay) */
+export type SurfaceType = 'floor' | 'wall' | 'both';
 
 /** San pham vat lieu xay dung (Catalog / Trending) */
 export interface Product {
@@ -19,7 +31,17 @@ export interface Product {
   price: number; // don vi: VND
   unit: UnitOfMeasure;
   imageUrl: string; // URL anh san pham
-  category: string; // VD: 'Gach op lat', 'Son nuoc'
+  category: ProductCategory;
+  /* ---------- Thong tin bo sung cho man Chi tiet ---------- */
+  description: string; // mo ta ngan gon
+  origin: string; // xuat xu
+  warranty: string; // bao hanh
+  inStock: boolean; // con hang hay khong
+  /* ---------- Thong tin phuc vu Virtual Visualizer ---------- */
+  surfaceType: SurfaceType; // ap duoc cho san / tuong / ca hai
+  tileWidth: number; // chieu rong 1 vien (cm), 0 neu khong phai dang vien
+  tileHeight: number; // chieu dai 1 vien (cm), 0 neu khong phai dang vien
+  colorHex: string; // mau chu dao (dung cho son / loc mau)
 }
 
 /** Item Quick Actions (4 icon tron tren man Home) */
@@ -27,7 +49,8 @@ export interface QuickAction {
   id: string;
   label: string;
   iconName: IoniconName;
-  routeName: string; // screen dich trong Navigator
+  /** Chi cho phep cac route co that trong Navigator (type-safe) */
+  routeName: keyof RootTabParamList;
 }
 
 /** Du an / cong trinh tieu bieu (Reference Projects) */
@@ -39,10 +62,24 @@ export interface Project {
   area: string; // Dien tich thi cong, VD: '120 m2'
 }
 
-/** Params cua Bottom Tab Navigator */
+/* ================== NAVIGATION ================== */
+
+/** Params cua bottom tab "Catalog" (Stack Navigator long ben trong) */
+export type CatalogStackParamList = {
+  CatalogList: undefined;
+  ProductDetail: { productId: string };
+};
+
+/**
+ * Params cua Bottom Tab Navigator.
+ * Tab Catalog dung NavigatorScreenParams de ho tro navigate long stack:
+ *   navigation.navigate('Catalog', { screen: 'ProductDetail', params: {...} })
+ */
 export type RootTabParamList = {
   Home: { greeting?: string } | undefined;
   Simulate: undefined;
   Quote: undefined;
   Profile: undefined;
+  /** Tab Catalog chua Stack (danh sach -> chi tiet) */
+  Catalog: NavigatorScreenParams<CatalogStackParamList> | undefined;
 };
